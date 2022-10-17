@@ -14,6 +14,13 @@
  * Domain Path: /ws_event
  */
 
+add_action('wp_enqueue_scripts', 'wsevent_add_theme_scripts');
+
+function wsevent_add_theme_scripts() {
+    wp_enqueue_style('bootstrap-grid', 'https://cdn.jsdelivr.net/npm/bootstrap-v4-grid-only@1.0.0/dist/bootstrap-grid.min.css', [], '1.0');
+    wp_enqueue_style('ws_event', plugin_dir_url(__FILE__) . '/assets/css/style.css', [], '1.0');
+}
+
 add_action('init', 'wsevent_registering_custom_posttype');
 
 function wsevent_registering_custom_posttype() {
@@ -141,3 +148,12 @@ function wsevent_columns_customization($column) {
     }
 }
 add_action('manage_posts_custom_column', 'wsevent_columns_customization');
+
+function wsevent_single_ws_event($link) {
+    global $post;
+    if (get_post_type() == 'ws_event') {
+        $link = dirname(__FILE__) . '/single-ws_event.php';
+    }
+    return $link;
+}
+add_filter('single_template', 'wsevent_single_ws_event');
