@@ -116,3 +116,28 @@ function wsevent_post_persistence() {
 }
 
 add_action('save_post', 'wsevent_post_persistence');
+
+function wsevent_columns() {
+    return [
+        'cb' => '<input type="checkbox" />',
+        'title' => __('Titre'),
+        'startDate' => __('Date de début'),
+        'endDate' => __('Date de fin')
+    ];
+}
+add_filter('manage_edit-ws_event_columns', 'wsevent_columns');
+
+function wsevent_columns_customization($column) {
+    global $post;
+    $post_type = get_post_type();
+    if($post_type == 'ws_event') {
+        $event = get_post_custom($post->ID);
+        if($column == 'startDate' && isset($event['startDate'])) {
+            echo date_format(date_create($event['startDate'][0]), 'd/m/Y');
+        }
+        if($column == 'endDate' && isset($event['endDate'])) {
+            echo date_format(date_create($event['endDate'][0]), 'd/m/Y');
+        }
+    }
+}
+add_action('manage_posts_custom_column', 'wsevent_columns_customization');
