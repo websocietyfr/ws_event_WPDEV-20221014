@@ -157,3 +157,12 @@ function wsevent_single_ws_event($link) {
     return $link;
 }
 add_filter('single_template', 'wsevent_single_ws_event');
+
+function wsevent_archive_ws_event($link) {
+    global $post;
+    if (get_post_type() == 'ws_event') {
+        $link = dirname(__FILE__) . '/archive-ws_event.php';
+    }
+    return $link;
+}
+add_filter('archive_template', 'wsevent_archive_ws_event');
