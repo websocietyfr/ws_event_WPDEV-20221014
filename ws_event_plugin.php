@@ -36,7 +36,7 @@ function wsevent_registering_custom_posttype() {
         'labels' => $labels,
         'hierarchical' => false,
         'description' => __('Liste des événements'),
-        'supports' => array('title', 'editor', 'thumbnail', 'author', 'revision', 'excerpt', 'custom-fields'),
+        'supports' => array('title', 'editor', 'thumbnail', 'author', 'revision', 'excerpt'),
         'taxonomies' => array('category'),
         'public' => true,
         'show_in_menu' => true,
@@ -75,25 +75,44 @@ function wsevent_metabox_content() {
     ?>
         <p>
             <label for="startDate"><?php echo __('Date de début'); ?></label>
-            <input type="datetime-local" name="startDate" id="startDate" required/>
+            <input type="date" name="startDate" id="startDate" value="<?php echo $startDate; ?>" required/>
         </p>
         <p>
             <label for="endDate"><?php echo __('Date de fin'); ?></label>
-            <input type="datetime-local" name="endDate" id="endDate" required/>
+            <input type="date" name="endDate" id="endDate" value="<?php echo $endDate; ?>" required/>
         </p>
         <p>
             <label for="eventLink"><?php echo __('lien de l\'événement'); ?></label>
-            <input type="url" name="eventLink" id="eventLink" required/>
+            <input type="url" name="eventLink" id="eventLink" value="<?php echo $eventLink; ?>" required/>
         </p>
         <p>
             <label for="subscriptionLink"><?php echo __('lien d\'inscription à l\'événement'); ?></label>
-            <input type="url" name="subscriptionLink" id="subscriptionLink" required/>
+            <input type="url" name="subscriptionLink" id="subscriptionLink" value="<?php echo $subscriptionLink; ?>" required/>
         </p>
         <p>
             <label for="noticeLink"><?php echo __('lien vers le doc "Infos pratiques"'); ?></label>
-            <input type="url" name="noticeLink" id="noticeLink" required/>
+            <input type="url" name="noticeLink" id="noticeLink" value="<?php echo $noticeLink; ?>" required/>
         </p>
     <?php
 }
 
 add_action('add_meta_boxes', 'wsevent_metabox');
+
+function wsevent_post_persistence() {
+    global $post;
+    $post_type = get_post_type();
+    if ($post_type == 'ws_event') {
+        if (isset($_POST['startDate']))
+            update_post_meta($post->ID, 'startDate', $_POST['startDate']);
+        if (isset($_POST['endDate']))
+            update_post_meta($post->ID, 'endDate', $_POST['endDate']);
+        if (isset($_POST['eventLink']))
+            update_post_meta($post->ID, 'eventLink', $_POST['eventLink']);
+        if (isset($_POST['subscriptionLink']))
+            update_post_meta($post->ID, 'subscriptionLink', $_POST['subscriptionLink']);
+        if (isset($_POST['noticeLink']))
+            update_post_meta($post->ID, 'noticeLink', $_POST['noticeLink']);
+    }
+}
+
+add_action('save_post', 'wsevent_post_persistence');
