@@ -18,7 +18,8 @@
         </div>
         <div class="col-sm">
             <strong>Date de fin :</strong><br>
-            <?php if(isset($event['endDate'])) echo date_format(date_create($event['endDate'][0]), 'd/m/Y') ?>
+            <?php // if(isset($event['endDate'])) echo date_format(date_create($event['endDate'][0]), 'd/m/Y') ?>
+            <?php if(get_post_meta(get_the_ID(), 'endDate', true)) echo date_format(date_create(get_post_meta(get_the_ID(), 'endDate', true)), 'd/m/Y') ?>
         </div>
     </div>
 </div>
@@ -44,4 +45,9 @@
         </div>
     </div>
 </div>
+<section class="archives">
+    <?php
+        echo do_shortcode('[wsevent]');
+    ?>
+</section>
 <?php get_footer();

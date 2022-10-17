@@ -166,3 +166,37 @@ function wsevent_archive_ws_event($link) {
     return $link;
 }
 add_filter('archive_template', 'wsevent_archive_ws_event');
+
+function wsevent_shortcode_displayLastsEvents($atts = [], $content = '') {
+    $attributes = shortcode_atts( array(
+        'categ' => null
+    ), $atts);
+
+    $arrayOfIds = [];
+    if (isset($attributes['categ']) && $attributes['categ'] !== null)
+        $arrayOfIds = explode(',', $attributes['categ']);
+
+    $query = new WP_Query( array(
+        'category__in' => $arrayOfIds,
+        'post_type' => 'ws_event'
+    ) );
+
+    // Build content
+    $content .= '<ul>';
+    while($query->have_posts()) {
+        $query->the_post();
+        $content .= '<li><a href="'.get_the_permalink().'" target="_blank">'.get_the_title().'</a></li>';
+    }
+    $content .= '</ul>';
+    // $content = '<html>sdkjshqdkljhdjk</html>';
+    return $content;
+}
+
+add_shortcode('wsevent', 'wsevent_shortcode_displayLastsEvents');
+
+include_once('ws_event-widget.php');
+add_action( 'widgets_init', 'wsevent_register_widgets' );
+
+function wsevent_register_widgets() {
+	register_widget( 'WS_Widget' );
+}
