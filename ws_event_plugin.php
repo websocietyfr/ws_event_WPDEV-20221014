@@ -240,3 +240,5 @@ function wsevent_dashboard_widget() {
 }
 
 add_action('wp_dashboard_setup', 'wsevent_dashboard_widget');
+
+include_once('ws_event_plugin_settings.php');

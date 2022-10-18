@@ -1,6 +1,9 @@
 <?php get_header(); ?>
-<?php $event = get_post_custom(); ?>
-<section class="container">
+<?php
+    $event = get_post_custom();
+    $fullwidth = get_option( 'wsevent_fullwidth' );
+?>
+<section class="<?php if(!$fullwidth) echo 'container' ?>">
     <div class="row">
         <div class="col-sm">
             <h1><?php the_title(); ?></h1>
@@ -10,7 +13,7 @@
         </div>
     </div>
 </section>
-<div class="container">
+<div class="<?php if(!$fullwidth) echo 'container' ?>">
     <div class="row align-center">
         <div class="col-sm">
             <strong>Date de début :</strong><br>
@@ -23,10 +26,10 @@
         </div>
     </div>
 </div>
-<section class="container">
+<section class="<?php if(!$fullwidth) echo 'container' ?>">
     <p><?php the_content(); ?></p>
 </section>
-<div class="container">
+<div class="<?php if(!$fullwidth) echo 'container' ?>">
     <div class="row align-center">
         <div class="col-sm">
             <?php if(isset($event['eventLink'])): ?>
