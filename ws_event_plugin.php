@@ -200,3 +200,43 @@ add_action( 'widgets_init', 'wsevent_register_widgets' );
 function wsevent_register_widgets() {
 	register_widget( 'WS_Widget' );
 }
+
+function wsevent_dash_widget_content() {
+    $query = new WP_Query([
+        'post_type' => 'ws_event',
+        'meta_query' => array(
+            array(
+                'key'     => 'startDate',
+                'value'   => date('Y-m-d'),
+                'compare' => '>',
+                'type'    => 'DATE'
+            ),
+        ),
+        'limit' => 3
+    ]);
+    echo '<h2>Vos actions possibles</h2>';
+    echo '<ul>';
+    echo '<li><a href="'.get_admin_url(null, 'post-new.php?post_type=ws_event').'">Créer un nouvel événement</a></li>';
+    echo '<li><a href="'.get_admin_url(null, 'edit-tags.php?taxonomy=category&post_type=ws_event').'">Gérez vos catégories</a></li>';
+    echo '<li><a href="'.get_admin_url(null, 'edit.php?post_type=ws_event').'">Accéder à la liste de vos événements</a></li>';
+    echo '</ul>';
+    if(count($query->get_posts()) > 0) {
+        echo '<h2>List des 3 prochains événements</h2>';
+        echo '<ul>';
+        while($query->have_posts()) {
+            $query->the_post();
+            echo '<li><a href="'.get_edit_post_link().'">'.get_the_title().'</a></li>';
+        }
+        echo '</ul>';
+    }
+}
+
+function wsevent_dashboard_widget() {
+    wp_add_dashboard_widget(
+        'wsevent_dash',
+        __('Vos événements'),
+        'wsevent_dash_widget_content',
+    );
+}
+
+add_action('wp_dashboard_setup', 'wsevent_dashboard_widget');

@@ -11,6 +11,7 @@ class WS_Widget extends WP_Widget {
 
     public function widget($args, $instance)
     {
+        var_dump($instance);
         $category_id = $instance['category_id'] ? $instance['category_id'] : null;
         echo '<h3>Les événements: </h3>';
         if($category_id) {
@@ -24,6 +25,7 @@ class WS_Widget extends WP_Widget {
     {
         $categories = get_categories();
         $option = isset($instance['category_id']) && !empty($instance['category_id']) ? $instance['category_id'] : null;
+        var_dump($instance);
         ?>
             <p>
                 <label for="category_id">Choisissez une catégorie ou laissez vide:</label>
@@ -40,8 +42,8 @@ class WS_Widget extends WP_Widget {
     public function update($new_instance, $old_instance)
     {
         $instance = array();
-        $instance['category_id'] = isset($new_instance['category_id']) && !empty($new_instance['category_id']) ? $new_instance['category_id'] : null;
-        var_dump($instance,$new_instance, $old_instance);die;
+        $instance['category_id'] = strip_tags($new_instance['category_id']);
+        $instance['test'] = strip_tags($new_instance['category_id']);
 
         return $instance;
     }
