@@ -32,18 +32,18 @@
 <div class="<?php if(!$fullwidth) echo 'container' ?>">
     <div class="row align-center">
         <div class="col-sm">
-            <?php if(isset($event['eventLink'])): ?>
-                <a href="<?php echo $event['eventLink'][0]; ?>" target="_blank"><strong>Cliquez ici pour accéder à plus d'infos</strong></a>
+            <?php if(isset($event['eventLink']) && !empty($event['eventLink'][0])): ?>
+                <a href="<?php echo wp_get_attachment_url($event['eventLink'][0]); ?>" target="_blank"><strong>Cliquez ici pour accéder à plus d'infos</strong></a>
             <?php endif; ?>
         </div>
         <div class="col-sm">
-            <?php if(isset($event['eventLink'])): ?>
-                <a href="<?php echo $event['subscriptionLink'][0]; ?>" target="_blank"><strong>Cliquez ici pour vous inscrire</strong></a>
+            <?php if(isset($event['subscriptionLink']) && !empty($event['subscriptionLink'][0])): ?>
+                <a href="<?php echo wp_get_attachment_url($event['subscriptionLink'][0]); ?>" target="_blank"><strong>Cliquez ici pour vous inscrire</strong></a>
             <?php endif; ?>
         </div>
         <div class="col-sm">
-            <?php if(isset($event['eventLink'])): ?>
-                <a href="<?php echo $event['noticeLink'][0]; ?>" target="_blank"><strong>Cliquez ici pour acéder aux infos pratiques</strong></a>
+            <?php if(isset($event['noticeLink']) && !empty($event['noticeLink'][0])): ?>
+                <a href="<?php echo wp_get_attachment_url($event['noticeLink'][0]); ?>" target="_blank"><strong>Cliquez ici pour acéder aux infos pratiques</strong></a>
             <?php endif; ?>
         </div>
     </div>

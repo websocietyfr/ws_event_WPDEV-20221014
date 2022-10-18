@@ -23,6 +23,8 @@ function wsevent_add_theme_scripts() {
 
 // Scripts for admin
 function wsevent_admin_scripts() {
+    global $post;
+    wp_enqueue_style('ws_event_bo', plugin_dir_url(__FILE__) . '/assets/css/style.css', [], '1.1');
     wp_enqueue_script('wsevent_upload_script', plugin_dir_url(__FILE__).'/assets/js/upload.js', array('jquery'), '1.0');
     wp_localize_script(
 		'wsevent_upload_script',
@@ -30,6 +32,7 @@ function wsevent_admin_scripts() {
 		array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'nonce'    => wp_create_nonce( 'upload_event_file' ),
+			'post_id'    => isset($post) ? $post->ID : null,
         )
 	);
 }
@@ -105,21 +108,22 @@ function wsevent_metabox_content() {
         </p>
         <p>
             <label for="eventLink"><?php echo __('lien de l\'événement'); ?></label>
-            <input type="url" name="eventLink" id="eventLink" value="<?php echo $eventLink; ?>" required/>
+            <input type="file" id="eventLink" name="eventLink" class="input_file" <?php if($eventLink) echo 'disabled'; ?> />
+            <button class="input_file_reset <?php if($eventLink) echo 'active'; ?>" data-reference='eventLink' value="<?php echo $eventLink; ?>">Reset</button>
         </p>
         <p>
             <label for="subscriptionLink"><?php echo __('lien d\'inscription à l\'événement'); ?></label>
-            <input type="url" name="subscriptionLink" id="subscriptionLink" value="<?php echo $subscriptionLink; ?>" required/>
+            <input type="file" id="subscriptionLink" name="subscriptionLink" class="input_file" <?php if($subscriptionLink) echo 'disabled'; ?> />
+            <button class="input_file_reset <?php if($subscriptionLink) echo 'active'; ?>" data-reference='subscriptionLink' value="<?php echo $subscriptionLink; ?>">Reset</button>
         </p>
-        <!-- <p>
-            <label for="noticeLink"><?php echo __('lien vers le doc "Infos pratiques"'); ?></label>
-            <input type="url" name="noticeLink" id="noticeLink" value="<?php echo $noticeLink; ?>" required/>
-        </p> -->
         <p>
-            <label for="img_file">Documentations infos pratiques :</label>
-            <input type="file" id="img_file" name="input_file" class="input_file" />
-            <input type="hidden" id="hidden-file-field" name="hidden_file_field" value="" />
+            <label for="noticeLink">Documentations infos pratiques :</label>
+            <input type="file" id="noticeLink" name="noticeLink" class="input_file" <?php if($noticeLink) echo 'disabled'; ?> />
+            <button class="input_file_reset <?php if($noticeLink) echo 'active'; ?>" data-reference='noticeLink' value="<?php echo $noticeLink; ?>">Reset</button>
         </p>
+        <input type="hidden" id="eventLink_hidden" name="eventLink_hidden" value="<?php echo $eventLink; ?>" />
+        <input type="hidden" id="subscriptionLink_hidden" name="subscriptionLink_hidden" value="<?php echo $subscriptionLink; ?>" />
+        <input type="hidden" id="noticeLink_hidden" name="noticeLink_hidden" value="<?php echo $noticeLink; ?>" />
     <?php
 }
 
@@ -133,14 +137,12 @@ function wsevent_post_persistence() {
             update_post_meta($post->ID, 'startDate', $_POST['startDate']);
         if (isset($_POST['endDate']))
             update_post_meta($post->ID, 'endDate', $_POST['endDate']);
-        if (isset($_POST['eventLink']))
-            update_post_meta($post->ID, 'eventLink', $_POST['eventLink']);
-        if (isset($_POST['subscriptionLink']))
-            update_post_meta($post->ID, 'subscriptionLink', $_POST['subscriptionLink']);
-        // if (isset($_POST['noticeLink']))
-        //     update_post_meta($post->ID, 'noticeLink', $_POST['noticeLink']);
-        if (isset($_POST['hidden_file_field']))
-            update_post_meta($post->ID, 'noticeLink', $_POST['hidden_file_field']);
+        if (isset($_POST['eventLink_hidden']))
+            update_post_meta($post->ID, 'eventLink', $_POST['eventLink_hidden']);
+        if (isset($_POST['subscriptionLink_hidden']))
+            update_post_meta($post->ID, 'subscriptionLink', $_POST['subscriptionLink_hidden']);
+        if (isset($_POST['noticeLink_hidden']))
+            update_post_meta($post->ID, 'noticeLink', $_POST['noticeLink_hidden']);
     }
 }
 

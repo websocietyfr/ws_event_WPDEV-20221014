@@ -1,3 +1,11 @@
 .align-center {
     text-align:center;
 }
+
+.input_file_reset {
+    display: none;
+}
+
+.input_file_reset.active {
+    display: inline-block;
+}
