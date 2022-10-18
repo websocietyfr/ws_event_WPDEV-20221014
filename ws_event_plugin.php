@@ -21,6 +21,21 @@ function wsevent_add_theme_scripts() {
     wp_enqueue_style('ws_event', plugin_dir_url(__FILE__) . '/assets/css/style.css', [], '1.0');
 }
 
+// Scripts for admin
+function wsevent_admin_scripts() {
+    wp_enqueue_script('wsevent_upload_script', plugin_dir_url(__FILE__).'/assets/js/upload.js', array('jquery'), '1.0');
+    wp_localize_script(
+		'wsevent_upload_script',
+		'global',
+		array(
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'nonce'    => wp_create_nonce( 'upload_event_file' ),
+        )
+	);
+}
+
+add_action('admin_enqueue_scripts', 'wsevent_admin_scripts');
+
 add_action('init', 'wsevent_registering_custom_posttype');
 
 function wsevent_registering_custom_posttype() {
@@ -96,9 +111,14 @@ function wsevent_metabox_content() {
             <label for="subscriptionLink"><?php echo __('lien d\'inscription à l\'événement'); ?></label>
             <input type="url" name="subscriptionLink" id="subscriptionLink" value="<?php echo $subscriptionLink; ?>" required/>
         </p>
-        <p>
+        <!-- <p>
             <label for="noticeLink"><?php echo __('lien vers le doc "Infos pratiques"'); ?></label>
             <input type="url" name="noticeLink" id="noticeLink" value="<?php echo $noticeLink; ?>" required/>
+        </p> -->
+        <p>
+            <label for="img_file">Documentations infos pratiques :</label>
+            <input type="file" id="img_file" name="input_file" class="input_file" />
+            <input type="hidden" id="hidden-file-field" name="hidden_file_field" value="" />
         </p>
     <?php
 }
@@ -117,8 +137,10 @@ function wsevent_post_persistence() {
             update_post_meta($post->ID, 'eventLink', $_POST['eventLink']);
         if (isset($_POST['subscriptionLink']))
             update_post_meta($post->ID, 'subscriptionLink', $_POST['subscriptionLink']);
-        if (isset($_POST['noticeLink']))
-            update_post_meta($post->ID, 'noticeLink', $_POST['noticeLink']);
+        // if (isset($_POST['noticeLink']))
+        //     update_post_meta($post->ID, 'noticeLink', $_POST['noticeLink']);
+        if (isset($_POST['hidden_file_field']))
+            update_post_meta($post->ID, 'noticeLink', $_POST['hidden_file_field']);
     }
 }
 
@@ -242,3 +264,4 @@ function wsevent_dashboard_widget() {
 add_action('wp_dashboard_setup', 'wsevent_dashboard_widget');
 
 include_once('ws_event_plugin_settings.php');
+include_once('ws_event_plugin_upload.php');
